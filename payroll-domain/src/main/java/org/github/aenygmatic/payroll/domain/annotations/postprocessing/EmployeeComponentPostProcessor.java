@@ -28,7 +28,7 @@ public class EmployeeComponentPostProcessor extends CustomEnumAnnotationPostProc
     }
 
     @Override
-    String[] convertAnnotationParameters(EmployeeComponent component) {
+    String[] enumToStringName(EmployeeComponent component) {
         return new String[]{component.value().toString()};
     }
 }

@@ -26,7 +26,7 @@ public abstract class CustomEnumAnnotationPostProcessor<A extends Annotation> im
 
     abstract Class<A> annotationType();
 
-    abstract String[] convertAnnotationParameters(A component);
+    abstract String[] enumToStringName(A component);
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
@@ -39,7 +39,7 @@ public abstract class CustomEnumAnnotationPostProcessor<A extends Annotation> im
 
     private void registerCustomBeans(ConfigurableListableBeanFactory context, Object bean) {
         A component = bean.getClass().getAnnotation(annotationType());
-        for (String name : convertAnnotationParameters(component)) {
+        for (String name : enumToStringName(component)) {
             context.registerSingleton(name, bean);
         }
     }

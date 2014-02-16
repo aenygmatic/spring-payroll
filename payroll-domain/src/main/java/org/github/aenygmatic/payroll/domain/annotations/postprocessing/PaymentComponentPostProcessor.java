@@ -29,7 +29,7 @@ public class PaymentComponentPostProcessor extends CustomEnumAnnotationPostProce
     }
 
     @Override
-    String[] convertAnnotationParameters(PaymentComponent component) {
+    String[] enumToStringName(PaymentComponent component) {
         PayType[] types = component.value();
         String[] names = new String[types.length];
         for (int i = 0; i < types.length; i++) {
