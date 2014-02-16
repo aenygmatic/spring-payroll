@@ -20,12 +20,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-@Qualifier
-@org.springframework.stereotype.Service
+@Service
+@Autowired
+@Qualifier("usecaseproxy")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER})
-public @interface Service {
+public @interface UseCaseProxy {
 
 }

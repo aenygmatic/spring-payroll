@@ -20,9 +20,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.github.aenygmatic.payroll.domain.Employee;
-import org.github.aenygmatic.payroll.usecases.Service;
+import org.github.aenygmatic.payroll.usecases.UseCaseProxy;
 
-@Service
+@UseCaseProxy
 public class HireEmployeeService implements HireEmployee {
 
     @Autowired

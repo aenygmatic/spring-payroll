@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -28,18 +27,16 @@ import org.github.aenygmatic.payroll.domain.Employee;
 import org.github.aenygmatic.payroll.domain.PayType;
 import org.github.aenygmatic.payroll.integration.employee.internal.InternalEmployee;
 import org.github.aenygmatic.payroll.integration.employee.outsourced.OutsourcedEmployee;
-import org.github.aenygmatic.payroll.usecases.Service;
+import org.github.aenygmatic.payroll.usecases.UseCaseProxy;
 import org.github.aenygmatic.payroll.usecases.hire.HireEmployee;
 import org.github.aenygmatic.payroll.usecases.pay.PayEmployee;
 
 @Component
 public class PayrollSystem {
 
-    @Service
-    @Autowired
+    @UseCaseProxy
     private HireEmployee hireEmployeeService;
-    @Service
-    @Autowired
+    @UseCaseProxy
     private PayEmployee payEmployeeService;
 
     private List<Employee> employees = new ArrayList<>();
