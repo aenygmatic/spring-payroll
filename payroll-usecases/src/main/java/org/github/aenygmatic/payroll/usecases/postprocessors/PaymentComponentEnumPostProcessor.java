@@ -15,44 +15,46 @@
  */
 package org.github.aenygmatic.payroll.usecases.postprocessors;
 
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Component;
 
 import org.github.aenygmatic.payroll.domain.PayType;
 import org.github.aenygmatic.payroll.domain.annotations.PaymentComponent;
 import org.github.aenygmatic.payroll.usecases.pay.PayEmployee;
 
-@Deprecated
-public class PaymentComponentEnumPostProcessor extends EnumMapGeneratingBeanPostProcessor<PaymentComponent, PayEmployee> {
-
-    private final Map<PayType, PayEmployee> beans = new EnumMap<>(PayType.class);
+@Component
+public class PaymentComponentEnumPostProcessor extends EnumMapGeneratingBeanPostProcessor<PaymentComponent, PayType> {
 
     @Override
-    Class<PaymentComponent> annotationType() {
+    protected Map<PayType, Object> newEnumMap() {
+        return new EnumMap<>(PayType.class);
+    }
+
+    @Override
+    protected Class<PaymentComponent> annotationType() {
         return PaymentComponent.class;
     }
 
     @Override
-    Class<PayEmployee> interfaceType() {
-        return PayEmployee.class;
-    }
-
-    @Override
-    void addToMap(PayEmployee bean) {
+    protected void addToMap(Map<PayType, Object> proxyMap, Object bean) {
         PayType[] keys = bean.getClass().getAnnotation(annotationType()).value();
         for (PayType k : keys) {
-            beans.put(k, bean);
+            proxyMap.put(k, bean);
         }
     }
 
     @Override
-    String getName() {
-        return "payTypeToPayEmployee";
+    protected List<Class<?>> interfaceTypes() {
+        return Arrays.<Class<?>>asList(PayEmployee.class);
     }
 
     @Override
-    Object getMap() {
-        return beans;
+    protected String generateName(Class<?> interfaceType) {
+        String s = PayType.class.getSimpleName() + interfaceType.getSimpleName() + "Proxy";
+        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
     }
-
 }

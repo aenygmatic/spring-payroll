@@ -16,33 +16,36 @@
 package org.github.aenygmatic.payroll.usecases.postprocessors;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
-@Deprecated
-public abstract class EnumMapGeneratingBeanPostProcessor<A extends Annotation, I> implements BeanFactoryPostProcessor {
+public abstract class EnumMapGeneratingBeanPostProcessor<A extends Annotation, E extends Enum> implements BeanFactoryPostProcessor {
 
-    abstract Class<A> annotationType();
+    protected abstract Class<A> annotationType();
 
-    abstract Class<I> interfaceType();
+    protected abstract List<Class<?>> interfaceTypes();
 
-    abstract void addToMap(I bean);
+    protected abstract Map<E, Object> newEnumMap();
 
-    abstract String getName();
+    protected abstract void addToMap(Map<E, Object> proxyMap, Object bean);
 
-    abstract Object getMap();
+    protected abstract String generateName(Class<?> interfaceType);
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         Map<String, Object> beansWithAnnotation = beanFactory.getBeansWithAnnotation(annotationType());
-        for (Object bean : beansWithAnnotation.values()) {
-            if (interfaceType().isInstance(bean)) {
-                addToMap((I) bean);
+        for (Class<?> interfaceType : interfaceTypes()) {
+            Map<E, Object> proxyMap = newEnumMap();
+            for (Object bean : beansWithAnnotation.values()) {
+                if (interfaceType.isInstance(bean)) {
+                    addToMap(proxyMap, bean);
+                }
             }
+            beanFactory.registerSingleton(generateName(interfaceType), proxyMap);
         }
-        beanFactory.registerSingleton(getName(), getMap());
     }
 }

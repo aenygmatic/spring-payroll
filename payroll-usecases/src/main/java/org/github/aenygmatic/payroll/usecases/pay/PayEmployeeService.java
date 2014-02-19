@@ -17,20 +17,21 @@ package org.github.aenygmatic.payroll.usecases.pay;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import org.github.aenygmatic.payroll.domain.Employee;
+import org.github.aenygmatic.payroll.domain.PayType;
 import org.github.aenygmatic.payroll.usecases.UseCaseProxy;
 
 @UseCaseProxy
 public class PayEmployeeService implements PayEmployee {
 
-    @Autowired
-    private Map<String, PayEmployee> usecases;
+    @Resource(name = "payTypePayEmployeeProxy")
+    private Map<PayType, PayEmployee> usecases;
 
     @Override
     public void pay(Employee employee) {
-        PayEmployee usecase = usecases.get(employee.payType().toString());
+        PayEmployee usecase = usecases.get(employee.payType());
         if (usecase != null) {
             usecase.pay(employee);
         } else {
